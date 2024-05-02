@@ -1,5 +1,10 @@
 library(rvest)
 library(janitor)
+library(readr)
+library(chilemapas)
+library(wesanderson)#Zissou1, o heat de base
+library(plotly)
+#wes_palette("Zissou1")
 
 url <- 'https://www.sernameg.gob.cl/?page_id=27084'
 html <- read_html(url) %>% 
@@ -38,11 +43,6 @@ fem_frustrados[ , i] <- apply(fem_frustrados[ , i], 2,            # Specify own 
 
 fem_frustrados$Región <- sub(".*? ", "", fem_frustrados$Región)
 
-library(readr)
-library(chilemapas)
-library(wesanderson)#Zissou1, o heat de base
-library(plotly)
-#wes_palette("Zissou1")
 fem_consumados$Región <- gsub("á","a",
                               gsub("é","e",
                                    gsub("í","i",
