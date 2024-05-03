@@ -127,3 +127,37 @@ plot_con_sn <- ggplot(datos_frus |>
                        name="Frecuencia",
                        na.value = "grey50")+ theme_classic()
 ggplotly(plot_con_sn)
+
+
+####
+#agregado
+
+fem_consumados$Tipo <- "Consumados"
+fem_frustrados$Tipo <- "Frustrados"
+
+agregado <- rbind(fem_consumados,fem_frustrados)
+
+#fusión geometry y datos
+
+c <- codigos_territoriales |> 
+  select(codigo_region,nombre_region) |> 
+  distinct() |> 
+  full_join(agregado, by = join_by(nombre_region == Región))
+
+datos_agregados <- c |> 
+  left_join(generar_regiones(mapa = chilemapas::mapa_comunas)) 
+
+plot_agregados <- ggplot(datos_agregados, aes(fill=`2013`, geometry = geometry))+
+  geom_sf()+
+  scale_fill_gradientn(colours=(wes_palette("Zissou1")),
+                       name="Frecuencia",
+                       na.value = "grey50")+ theme_classic()
+ggplotly(plot_agregados)
+
+plot_agregados_sn <- ggplot(datos_agregados |> 
+                        filter(nombre_region != "Metropolitana de Santiago"), aes(fill=`2013`, geometry = geometry))+
+  geom_sf()+
+  scale_fill_gradientn(colours=(wes_palette("Zissou1")),
+                       name="Frecuencia",
+                       na.value = "grey50")+ theme_classic()
+ggplotly(plot_agregados_sn)
