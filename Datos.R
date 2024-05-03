@@ -43,6 +43,9 @@ fem_frustrados[ , i] <- apply(fem_frustrados[ , i], 2,            # Specify own 
 
 fem_frustrados$Región <- sub(".*? ", "", fem_frustrados$Región)
 
+
+####
+#limpieza texto para cruce
 fem_consumados$Región <- gsub("á","a",
                               gsub("é","e",
                                    gsub("í","i",
@@ -69,10 +72,58 @@ a <- codigos_territoriales |>
 datos <- a |> 
   left_join(generar_regiones(mapa = chilemapas::mapa_comunas)) 
 
-plot <- ggplot(datos, aes(fill=`2013`, geometry = geometry))+
+plot_con <- ggplot(datos, aes(fill=`2013`, geometry = geometry))+
   geom_sf()+
   scale_fill_gradientn(colours=(wes_palette("Zissou1")),
                        name="Frecuencia",
                        na.value = "grey50")+ theme_classic()
+ggplotly(plot_con)
 
-ggplotly(plot)
+plot_con_sn <- ggplot(datos |> 
+                        filter(nombre_region != "Metropolitana de Santiago"), aes(fill=`2013`, geometry = geometry))+
+  geom_sf()+
+  scale_fill_gradientn(colours=(wes_palette("Zissou1")),
+                       name="Frecuencia",
+                       na.value = "grey50")+ theme_classic()
+ggplotly(plot_con_sn)
+
+
+####
+fem_frustrados$Región <- gsub("á","a",
+                              gsub("é","e",
+                                   gsub("í","i",
+                                        gsub("ó","o",
+                                             gsub("ö","o",
+                                                  gsub("ú","u",
+                                                       gsub("ü","u",
+                                                            fem_frustrados$Región)))))))
+fem_frustrados$Región[fem_frustrados$Región == "Magallanes"] <- "Magallanes y de la Antartica Chilena"
+fem_frustrados$Región[fem_frustrados$Región == "Aysen"] <- "Aysen del General Carlos Ibanez del Campo"
+fem_frustrados$Región[fem_frustrados$Región == "Ñuble"] <- "Nuble"
+fem_frustrados$Región[fem_frustrados$Región == "O’Higgins"] <- "Libertador General Bernardo OHiggins"
+fem_frustrados$Región[fem_frustrados$Región == "Araucania"] <- "La Araucania"
+fem_frustrados$Región[fem_frustrados$Región == "Bio Bio"] <- "Biobio"
+fem_frustrados$Región[fem_frustrados$Región == "Metropolitana"] <- "Metropolitana de Santiago"
+
+b <- codigos_territoriales |> 
+  select(codigo_region,nombre_region) |> 
+  distinct() |> 
+  full_join(fem_frustrados, by = join_by(nombre_region == Región))
+
+datos_frus <- b |> 
+  left_join(generar_regiones(mapa = chilemapas::mapa_comunas)) 
+
+plot_frus <- ggplot(datos_frus, aes(fill=`2013`, geometry = geometry))+
+  geom_sf()+
+  scale_fill_gradientn(colours=(wes_palette("Zissou1")),
+                       name="Frecuencia",
+                       na.value = "grey50")+ theme_classic()
+ggplotly(plot_frus)
+
+plot_con_sn <- ggplot(datos_frus |> 
+                        filter(nombre_region != "Metropolitana de Santiago"), aes(fill=`2013`, geometry = geometry))+
+  geom_sf()+
+  scale_fill_gradientn(colours=(wes_palette("Zissou1")),
+                       name="Frecuencia",
+                       na.value = "grey50")+ theme_classic()
+ggplotly(plot_con_sn)
