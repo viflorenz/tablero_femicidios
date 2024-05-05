@@ -8,7 +8,7 @@ library(readr)
 library(chilemapas)
 library(wesanderson)#Zissou1, o heat de base
 library(plotly)
-#wes_palette("Zissou1")
+#wes_palette("Zissou1") 
 
 #https://datos.gob.cl/dataset/7161
 
