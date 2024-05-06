@@ -141,8 +141,8 @@ ui <- fluidPage(
       verbatimTextOutput("Sí"),
       
       selectInput("anio", "Año:",
-                  c("2013" = "2013",
-                    "2014" = "2014"))
+                  c("2013" = `anio_2013`,
+                    "2014" = `anio_2014`))
     ),
 
         # Show a plot of the generated distribution
