@@ -136,13 +136,23 @@ ui <- fluidPage(
           selectInput("tipo",
                         "Tipo:",
                       unique(datos_agregados$Tipo)),
-          
-      checkboxInput("rm_incl", "¿Región Metropolitana inclusive?", TRUE),
-      verbatimTextOutput("Sí"),
       
       selectInput("anio", "Año:",
                   c("2013" = "anio_2013",
-                    "2014" = "anio_2014"))
+                    "2014" = "anio_2014",
+                    "2015" = "anio_2015",
+                    "2016" = "anio_2016",
+                    "2017" = "anio_2017",
+                    "2018" = "anio_2018",
+                    "2019" = "anio_2019",
+                    "2020" = "anio_2020",
+                    "2021" = "anio_2021",
+                    "2022" = "anio_2022",
+                    "2023" = "anio_2023",
+                    "2024" = "anio_2024")),
+      
+      checkboxInput("rm_incl", "¿Región Metropolitana inclusive?", TRUE),
+      verbatimTextOutput("Sí")
     ),
 
         # Show a plot of the generated distribution
