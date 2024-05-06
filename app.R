@@ -141,8 +141,8 @@ ui <- fluidPage(
       verbatimTextOutput("Sí"),
       
       selectInput("anio", "Año:",
-                  c("2013" = `anio_2013`,
-                    "2014" = `anio_2014`))
+                  c("2013" = "anio_2013",
+                    "2014" = "anio_2014"))
     ),
 
         # Show a plot of the generated distribution
@@ -159,7 +159,7 @@ server <- function(input, output){
     if(input$rm_incl){
       ggplot(datos_agregados |> 
                filter(Tipo == input$tipo), 
-             aes(fill = input$anio, geometry = geometry))+
+             aes_string(fill = input$anio, geometry = "geometry"))+
         geom_sf()+
         scale_fill_gradientn(colours=(wes_palette("Zissou1")),
                              name="Frecuencia",
@@ -168,7 +168,7 @@ server <- function(input, output){
       ggplot(datos_agregados |> 
                filter(Tipo == input$tipo) |> 
                filter(nombre_region != "Metropolitana de Santiago"), 
-             aes(fill = input$anio, geometry = geometry))+
+             aes_string(fill = input$anio, geometry = "geometry"))+
         geom_sf()+
         scale_fill_gradientn(colours=(wes_palette("Zissou1")),
                              name="Frecuencia",
