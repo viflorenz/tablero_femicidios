@@ -127,9 +127,10 @@ ui <- fluidPage(
         sidebarPanel(
           selectInput("tipo",
                         "Tipo:",
-                      unique(datos_agregados$Tipo)
-)
-        ),
+                      unique(datos_agregados$Tipo)),
+      checkboxInput("rm_incl", "¿Región Metropolitana inclusive?", TRUE),
+      verbatimTextOutput("Sí")
+    ),
 
         # Show a plot of the generated distribution
         mainPanel(
@@ -141,16 +142,37 @@ ui <- fluidPage(
 # Define server logic required to draw a histogram
 server <- function(input, output){
   
-  output$coropletico <- renderPlot((
-  ggplot(datos_agregados |> 
-           filter(Tipo == input$tipo), aes(fill=`2013`, geometry = geometry))+
-    geom_sf()+
-    scale_fill_gradientn(colours=(wes_palette("Zissou1")),
-                         name="Frecuencia",
-                         na.value = "grey50")+ theme_classic()
-  ))
-
+  # output$coropletico <- renderPlot((
+  # ggplot(datos_agregados |> 
+  #          filter(Tipo == input$tipo), aes(fill=`2013`, geometry = geometry))+
+  #   geom_sf()+
+  #   scale_fill_gradientn(colours=(wes_palette("Zissou1")),
+  #                        name="Frecuencia",
+  #                        na.value = "grey50")+ theme_classic()
+  # ))
+  
+  ####
+  output$coropletico <- renderPlot({
+    if(input$rm_incl){
+      ggplot(datos_agregados |> 
+               filter(Tipo == input$tipo), aes(fill=`2013`, geometry = geometry))+
+        geom_sf()+
+        scale_fill_gradientn(colours=(wes_palette("Zissou1")),
+                             name="Frecuencia",
+                             na.value = "grey50")+ theme_classic()
+    } else {
+      ggplot(datos_agregados |> 
+               filter(Tipo == input$tipo) |> 
+               filter(nombre_region != "Metropolitana de Santiago"), aes(fill=`2013`, geometry = geometry))+
+        geom_sf()+
+        scale_fill_gradientn(colours=(wes_palette("Zissou1")),
+                             name="Frecuencia",
+                             na.value = "grey50")+ theme_classic()
+      
+    }
+  })
 }
+
 
 # Run the application 
 shinyApp(ui = ui, server = server)
