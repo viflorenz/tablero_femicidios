@@ -65,6 +65,22 @@ fem_consumados$Región[fem_consumados$Región == "Araucania"] <- "La Araucania"
 fem_consumados$Región[fem_consumados$Región == "Bio Bio"] <- "Biobio"
 fem_consumados$Región[fem_consumados$Región == "Metropolitana"] <- "Metropolitana de Santiago"
 
+fem_frustrados$Región <- gsub("á","a",
+                              gsub("é","e",
+                                   gsub("í","i",
+                                        gsub("ó","o",
+                                             gsub("ö","o",
+                                                  gsub("ú","u",
+                                                       gsub("ü","u",
+                                                            fem_frustrados$Región)))))))
+fem_frustrados$Región[fem_frustrados$Región == "Magallanes"] <- "Magallanes y de la Antartica Chilena"
+fem_frustrados$Región[fem_frustrados$Región == "Aysen"] <- "Aysen del General Carlos Ibanez del Campo"
+fem_frustrados$Región[fem_frustrados$Región == "Ñuble"] <- "Nuble"
+fem_frustrados$Región[fem_frustrados$Región == "O’Higgins"] <- "Libertador General Bernardo OHiggins"
+fem_frustrados$Región[fem_frustrados$Región == "Araucania"] <- "La Araucania"
+fem_frustrados$Región[fem_frustrados$Región == "Bio Bio"] <- "Biobio"
+fem_frustrados$Región[fem_frustrados$Región == "Metropolitana"] <- "Metropolitana de Santiago"
+
 
 #agregado
 
