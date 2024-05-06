@@ -142,7 +142,8 @@ ui <- fluidPage(
 server <- function(input, output){
   
   output$coropletico <- renderPlot((
-  ggplot(datos_agregados, aes(fill=`2013`, geometry = geometry))+
+  ggplot(datos_agregados |> 
+           filter(Tipo == input$tipo), aes(fill=`2013`, geometry = geometry))+
     geom_sf()+
     scale_fill_gradientn(colours=(wes_palette("Zissou1")),
                          name="Frecuencia",
