@@ -25,7 +25,11 @@ fem_consumados[is.na(fem_consumados)] <- 0
 
 fem_consumados <- fem_consumados %>%
   mutate(across(everything(), as.character))
+
 fem_consumados <- row_to_names(fem_consumados,1)
+fem_consumados <- fem_consumados |> 
+  rename_with(~ paste0("anio_", .)) |> 
+  rename("Región" = "anio_Región")
 
 i <- c(2:13) 
 
@@ -40,7 +44,11 @@ fem_frustrados[is.na(fem_frustrados)] <- 0
 
 fem_frustrados <- fem_frustrados %>%
   mutate(across(everything(), as.character))
+
 fem_frustrados <- row_to_names(fem_frustrados,1)
+fem_frustrados <- fem_frustrados |> 
+  rename_with(~ paste0("anio_", .)) |> 
+  rename("Región" = "anio_Región")
 
 i <- c(2:13) 
 
