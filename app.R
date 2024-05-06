@@ -128,8 +128,13 @@ ui <- fluidPage(
           selectInput("tipo",
                         "Tipo:",
                       unique(datos_agregados$Tipo)),
+          
       checkboxInput("rm_incl", "¿Región Metropolitana inclusive?", TRUE),
-      verbatimTextOutput("Sí")
+      verbatimTextOutput("Sí"),
+      
+      selectInput("anio", "Año:",
+                  c("2013" = "2013",
+                    "2014" = "2014"))
     ),
 
         # Show a plot of the generated distribution
@@ -142,20 +147,11 @@ ui <- fluidPage(
 # Define server logic required to draw a histogram
 server <- function(input, output){
   
-  # output$coropletico <- renderPlot((
-  # ggplot(datos_agregados |> 
-  #          filter(Tipo == input$tipo), aes(fill=`2013`, geometry = geometry))+
-  #   geom_sf()+
-  #   scale_fill_gradientn(colours=(wes_palette("Zissou1")),
-  #                        name="Frecuencia",
-  #                        na.value = "grey50")+ theme_classic()
-  # ))
-  
-  ####
   output$coropletico <- renderPlot({
     if(input$rm_incl){
       ggplot(datos_agregados |> 
-               filter(Tipo == input$tipo), aes(fill=`2013`, geometry = geometry))+
+               filter(Tipo == input$tipo), 
+             aes(fill = input$anio, geometry = geometry))+
         geom_sf()+
         scale_fill_gradientn(colours=(wes_palette("Zissou1")),
                              name="Frecuencia",
@@ -163,7 +159,8 @@ server <- function(input, output){
     } else {
       ggplot(datos_agregados |> 
                filter(Tipo == input$tipo) |> 
-               filter(nombre_region != "Metropolitana de Santiago"), aes(fill=`2013`, geometry = geometry))+
+               filter(nombre_region != "Metropolitana de Santiago"), 
+             aes(fill = input$anio, geometry = geometry))+
         geom_sf()+
         scale_fill_gradientn(colours=(wes_palette("Zissou1")),
                              name="Frecuencia",
