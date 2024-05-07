@@ -150,13 +150,18 @@ ui <- fluidPage(
                   unique(datos_agregados$Año),
                   selected = "2024"),
       
-      checkboxInput("rm_incl", "¿Región Metropolitana inclusive?", TRUE),
-      verbatimTextOutput("Sí")
+      checkboxInput("rm_incl", "Región Metropolitana inclusive", TRUE),
+      verbatimTextOutput("Sí"),
+      
+      checkboxInput(inputId = "mostrar_tabla",
+                    label = "Mostrar tabla de datos",
+                    value = TRUE)
     ),
     
     # Show a plot of the generated distribution
     mainPanel(
-      plotOutput("coropletico")
+      plotOutput("coropletico"),
+      DT::DTOutput(outputId = "tabla_bonita")
     )
   )
 )
@@ -212,6 +217,13 @@ server <- function(input, output){
                              na.value = "grey50")+ theme_classic() + 
         theme(axis.line=element_blank(),axis.text.x=element_blank(),
               axis.text.y=element_blank(),axis.ticks=element_blank())
+    }
+  })
+  
+  output$tabla_bonita <- DT::renderDT({
+    if(input$mostrar_tabla){
+      DT::datatable(tabla_bonita %>%
+                      filter(Tipo == input$tipo))
     }
   })
 }
