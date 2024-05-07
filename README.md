@@ -1,4 +1,4 @@
-# Tableo Femicidios en Chile
+# Tablero Femicidios en Chile
 
 Tablero de datos de femicidios en Chile, del 2013 al 2024. 
 
