@@ -141,10 +141,12 @@ ui <- fluidPage(
     sidebarPanel(
       selectInput("tipo",
                   "Tipo:",
-                  unique(datos_agregados$Tipo)),
+                  unique(datos_agregados$Tipo),
+                  selected = "Consumados"),
       
       selectInput("anio", "Año:",
-                  unique(datos_agregados$Año)),
+                  unique(datos_agregados$Año),
+                  selected = "2024"),
       
       checkboxInput("rm_incl", "¿Región Metropolitana inclusive?", TRUE),
       verbatimTextOutput("Sí")
