@@ -139,8 +139,15 @@ ui <- fluidPage(
   theme = shinytheme("simplex"),
 
   titlePanel("Femicidios en Chile 2013 - 2024"),
+  p("La siguiente información es rescatada desde",
+    a("https://www.sernameg.gob.cl/?page_id=27084",
+      href = "https://www.sernameg.gob.cl/?page_id=27084",
+      target="_blank", rel="noopener noreferrer" )
+  ,", página web oficial del Ministerio de la Mujer y la 
+  Equidad de Género del Gobierno de Chile."),
   tabsetPanel( 
-  tabPanel("Introducción"),
+  tabPanel("Introducción",
+           "Hola"),
   tabPanel("Absoluto",
   fluidRow(
     column(6,
