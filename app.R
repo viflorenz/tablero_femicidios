@@ -124,7 +124,9 @@ plot_agregados_sn <- ggplot(datos_agregados |>
 
 tabla_bonita <- datos_agregados |> 
   select(!c(codigo_region,geometry)) |> 
-  select(nombre_region, Tipo, everything())
+  select(nombre_region, Tipo, everything()) |> 
+  rename("Región" = nombre_region) |> 
+  rename("Tipo femicidio" = "Tipo")
 
 datos_agregados <- datos_agregados |> 
   pivot_longer(!c(codigo_region,nombre_region,Tipo,geometry),
@@ -223,7 +225,7 @@ server <- function(input, output){
   output$tabla_bonita <- DT::renderDT({
     if(input$mostrar_tabla){
       DT::datatable(tabla_bonita %>%
-                      filter(Tipo == input$tipo),
+                      filter(`Tipo femicidio` == input$tipo),
                     options = list(dom = "ft",
                                    pageLength = 10000))
     }
