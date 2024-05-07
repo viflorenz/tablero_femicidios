@@ -184,7 +184,7 @@ ui <- fluidPage(
              poder entre el agresor y la víctima, o motivada por 
              una evidente intención de discriminación.")
            ),
-  tabPanel("Absoluto",
+  tabPanel("Cantidades absolutas",
   fluidRow(
     column(6,
       selectInput("tipo",
@@ -211,7 +211,7 @@ ui <- fluidPage(
       DT::DTOutput(outputId = "tabla_bonita")
   )
   ), #tabPannel comma
-  tabPanel("Proporcional")
+  tabPanel("Cantidades per cápita")
 ))
 
 server <- function(input, output){
