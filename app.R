@@ -123,7 +123,7 @@ plot_agregados_sn <- ggplot(datos_agregados |>
 # ggplotly(plot_agregados_sn)
 
 tabla_bonita <- datos_agregados |> 
-  select(!c(geometry)) |> 
+  select(!c(geometry, codigo_region)) |> 
   select(nombre_region, Tipo, everything()) |> 
   rename("Región" = nombre_region) |> 
   rename("Tipo femicidio" = "Tipo")
