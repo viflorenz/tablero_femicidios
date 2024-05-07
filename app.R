@@ -153,7 +153,12 @@ ui <- fluidPage(
       target="_blank", rel="noopener noreferrer")),
   tabsetPanel( 
   tabPanel("Introducción",
-           p("Según la legislación chilena (Ley 21.212), el femicidio 
+           p(""),
+           p("Según la legislación chilena (",
+             a("Ley 21.212",
+               href = "https://www.bcn.cl/leychile/navegar?idNorma=1143040&tipoVersion=0",
+               target="_blank", rel="noopener noreferrer"),
+           "), el femicidio 
            es el asesinato de una mujer ejecutado por quien es o ha 
            sido su cónyuge o conviviente, o con quien tiene o ha 
            tenido un hijo en común, en razón de tener o haber tenido 
