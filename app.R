@@ -223,7 +223,9 @@ server <- function(input, output){
   output$tabla_bonita <- DT::renderDT({
     if(input$mostrar_tabla){
       DT::datatable(tabla_bonita %>%
-                      filter(Tipo == input$tipo))
+                      filter(Tipo == input$tipo),
+                    options = list(dom = "ft",
+                                   pageLength = 10000))
     }
   })
 }
