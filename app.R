@@ -122,6 +122,59 @@ plot_agregados_sn <- ggplot(datos_agregados |>
                        na.value = "grey50")+ theme_classic()
 # ggplotly(plot_agregados_sn)
 
+url_pob <- 'https://es.wikipedia.org/wiki/Anexo:Regiones_de_Chile_por_poblaci%C3%B3n'
+html_pob <- read_html(url_pob) %>% 
+  html_table()
+
+tabla_pob <- html_pob[[1]]
+tabla_pob <- row_to_names(tabla_pob,1)
+tabla_pob <- tabla_pob |> 
+  select(Región, Población)
+tabla_pob <- tabla_pob[-17,]
+tabla_pob <- tabla_pob %>%
+  mutate(across(everything(), as.character))
+
+tabla_pob$Población <- str_squish(tabla_pob$Población)
+tabla_pob$Población <- str_remove(tabla_pob$Población, " ")
+tabla_pob$Población <- str_remove(tabla_pob$Población, " ")
+tabla_pob$Población <- as.numeric(tabla_pob$Población)
+
+tabla_pob$Región <- gsub("á","a",
+                              gsub("é","e",
+                                   gsub("í","i",
+                                        gsub("ó","o",
+                                             gsub("ö","o",
+                                                  gsub("ú","u",
+                                                       gsub("ü","u",
+                                                            tabla_pob$Región)))))))
+tabla_pob$Región[tabla_pob$Región == "Magallanes y la Antartica Chilena"] <- "Magallanes y de la Antartica Chilena"
+tabla_pob$Región[tabla_pob$Región == "Aysen"] <- "Aysen del General Carlos Ibanez del Campo"
+tabla_pob$Región[tabla_pob$Región == "Ñuble"] <- "Nuble"
+tabla_pob$Región[tabla_pob$Región == "O'Higgins"] <- "Libertador General Bernardo OHiggins"
+tabla_pob$Región[tabla_pob$Región == "Araucania"] <- "La Araucania"
+tabla_pob$Región[tabla_pob$Región == "Metropolitana"] <- "Metropolitana de Santiago"
+
+tabla_pob_datos <- full_join(tabla_pob, datos_agregados, by = join_by("Región" == "nombre_region")) 
+i <- c(4:15) 
+tabla_pob_datos[ , i] <- apply(tabla_pob_datos[ , i], 2,            # Specify own function within apply
+                              function(x) as.numeric(as.character(x)))
+tabla_pob_datos_percapita <- tabla_pob_datos %>%
+  mutate(
+    across(
+      all_of(i),
+      ~ format(.x / Población, digits = 2, scientific = FALSE),
+      .names = "percapita_{.col}"  
+    )
+  ) |> 
+  select(c(Región, Población, Tipo, geometry,18:29))
+
+i <- c(5:16)
+datos_percapita <- tabla_pob_datos_percapita
+
+datos_percapita[ , i] <- apply(datos_percapita[ , i], 2,            # Specify own function within apply
+                               function(x) as.numeric(as.character(x)))
+
+
 tabla_bonita <- datos_agregados |> 
   select(!c(geometry, codigo_region)) |> 
   select(nombre_region, Tipo, everything()) |> 
@@ -130,6 +183,11 @@ tabla_bonita <- datos_agregados |>
 
 datos_agregados <- datos_agregados |> 
   pivot_longer(!c(codigo_region,nombre_region,Tipo,geometry),
+               names_to = "Año",
+               values_to = "Cantidad")
+
+datos_percapita <- datos_percapita |> 
+  pivot_longer(!c(Región,Tipo,geometry,Población),
                names_to = "Año",
                values_to = "Cantidad")
 
