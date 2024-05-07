@@ -192,6 +192,19 @@ server <- function(input, output){
                                           summarize(min_value = min(Cantidad)) %>%
                                           pull(min_value)
                              ),
+                             labels = c(datos_agregados %>%
+                                          filter(Año == input$anio & Tipo == input$tipo) %>%
+                                          summarize(max_value = max(Cantidad)) %>%
+                                          pull(max_value),
+                                        datos_agregados %>%
+                                          filter(Año == input$anio & Tipo == input$tipo) %>%
+                                          summarize(max_value = max(Cantidad)) %>%
+                                          pull(max_value)/2,
+                                        datos_agregados %>%
+                                          filter(Año == input$anio & Tipo == input$tipo) %>%
+                                          summarize(min_value = min(Cantidad)) %>%
+                                          pull(min_value)
+                             ),
                              name="Frecuencia",
                              na.value = "grey50")+ theme_classic() + 
         theme(axis.line=element_blank(),axis.text.x=element_blank(),
@@ -216,6 +229,19 @@ server <- function(input, output){
                                           pull(max_value)/2,
                                         datos_agregados %>%
                                           filter(nombre_region != "Metropolitana de Santiago") |> 
+                                          filter(Año == input$anio & Tipo == input$tipo) %>%
+                                          summarize(min_value = min(Cantidad)) %>%
+                                          pull(min_value)
+                             ),
+                             labels = c(datos_agregados %>%
+                                          filter(Año == input$anio & Tipo == input$tipo) %>%
+                                          summarize(max_value = max(Cantidad)) %>%
+                                          pull(max_value),
+                                        datos_agregados %>%
+                                          filter(Año == input$anio & Tipo == input$tipo) %>%
+                                          summarize(max_value = max(Cantidad)) %>%
+                                          pull(max_value)/2,
+                                        datos_agregados %>%
                                           filter(Año == input$anio & Tipo == input$tipo) %>%
                                           summarize(min_value = min(Cantidad)) %>%
                                           pull(min_value)
