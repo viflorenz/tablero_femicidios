@@ -27,9 +27,9 @@ fem_consumados <- fem_consumados %>%
   mutate(across(everything(), as.character))
 
 fem_consumados <- row_to_names(fem_consumados,1)
-fem_consumados <- fem_consumados |> 
-  rename_with(~ paste0("anio_", .)) |> 
-  rename("Región" = "anio_Región")
+# fem_consumados <- fem_consumados |> 
+#   rename_with(~ paste0("anio_", .)) |> 
+#   rename("Región" = "anio_Región")
 
 i <- c(2:13) 
 
@@ -46,9 +46,9 @@ fem_frustrados <- fem_frustrados %>%
   mutate(across(everything(), as.character))
 
 fem_frustrados <- row_to_names(fem_frustrados,1)
-fem_frustrados <- fem_frustrados |> 
-  rename_with(~ paste0("anio_", .)) |> 
-  rename("Región" = "anio_Región")
+# fem_frustrados <- fem_frustrados |> 
+#   rename_with(~ paste0("anio_", .)) |> 
+#   rename("Región" = "anio_Región")
 
 i <- c(2:13) 
 
@@ -112,7 +112,7 @@ plot_agregados <- ggplot(datos_agregados, aes(fill=`2013`, geometry = geometry))
   scale_fill_gradientn(colours=(wes_palette("Zissou1")),
                        name="Frecuencia",
                        na.value = "grey50")+ theme_classic()
-ggplotly(plot_agregados)
+# ggplotly(plot_agregados)
 
 plot_agregados_sn <- ggplot(datos_agregados |> 
                               filter(nombre_region != "Metropolitana de Santiago"), aes(fill=`2013`, geometry = geometry))+
@@ -120,74 +120,97 @@ plot_agregados_sn <- ggplot(datos_agregados |>
   scale_fill_gradientn(colours=(wes_palette("Zissou1")),
                        name="Frecuencia",
                        na.value = "grey50")+ theme_classic()
-ggplotly(plot_agregados_sn)
+# ggplotly(plot_agregados_sn)
+
+tabla_bonita <- datos_agregados 
+
+datos_agregados <- datos_agregados |> 
+  pivot_longer(!c(codigo_region,nombre_region,Tipo,geometry),
+               names_to = "Año",
+               values_to = "Cantidad")
 
 
-# Define UI for application that draws a histogram
 ui <- fluidPage(
   #tema shinythemes
-    theme = shinytheme("simplex"),
-    # Application title
-    titlePanel("Femicidios en Chile 2013 - 2024"),
-
-    # Sidebar with a slider input for number of bins 
-    sidebarLayout(
-        sidebarPanel(
-          selectInput("tipo",
-                        "Tipo:",
-                      unique(datos_agregados$Tipo)),
+  theme = shinytheme("simplex"),
+  # Application title
+  titlePanel("Femicidios en Chile 2013 - 2024"),
+  
+  # Sidebar with a slider input for number of bins 
+  sidebarLayout(
+    sidebarPanel(
+      selectInput("tipo",
+                  "Tipo:",
+                  unique(datos_agregados$Tipo)),
       
       selectInput("anio", "Año:",
-                  c("2013" = "anio_2013",
-                    "2014" = "anio_2014",
-                    "2015" = "anio_2015",
-                    "2016" = "anio_2016",
-                    "2017" = "anio_2017",
-                    "2018" = "anio_2018",
-                    "2019" = "anio_2019",
-                    "2020" = "anio_2020",
-                    "2021" = "anio_2021",
-                    "2022" = "anio_2022",
-                    "2023" = "anio_2023",
-                    "2024" = "anio_2024")),
+                  unique(datos_agregados$Año)),
       
       checkboxInput("rm_incl", "¿Región Metropolitana inclusive?", TRUE),
       verbatimTextOutput("Sí")
     ),
-
-        # Show a plot of the generated distribution
-        mainPanel(
-           plotOutput("coropletico")
-        )
+    
+    # Show a plot of the generated distribution
+    mainPanel(
+      plotOutput("coropletico")
     )
+  )
 )
 
-# Define server logic required to draw a histogram
 server <- function(input, output){
   
   output$coropletico <- renderPlot({
     if(input$rm_incl){
       ggplot(datos_agregados |> 
-               filter(Tipo == input$tipo), 
-             aes_string(fill = input$anio, geometry = "geometry"))+
+               filter(Año == input$anio & Tipo == input$tipo), 
+             aes(fill = Cantidad, geometry = geometry))+
         geom_sf()+
-        scale_fill_gradientn(colours=(wes_palette("Zissou1")),
+        scale_fill_gradientn(colours = (wes_palette("Zissou1")),
+                             breaks = c(datos_agregados %>%
+                                          filter(Año == input$anio & Tipo == input$tipo) %>%
+                                          summarize(max_value = max(Cantidad)) %>%
+                                          pull(max_value),
+                                        datos_agregados %>%
+                                          filter(Año == input$anio & Tipo == input$tipo) %>%
+                                          summarize(max_value = max(Cantidad)) %>%
+                                          pull(max_value)/2,
+                                        datos_agregados %>%
+                                          filter(Año == input$anio & Tipo == input$tipo) %>%
+                                          summarize(min_value = min(Cantidad)) %>%
+                                          pull(min_value)
+                             ),
                              name="Frecuencia",
-                             na.value = "grey50")+ theme_classic()
+                             na.value = "grey50")+ theme_classic() + 
+        theme(axis.line=element_blank(),axis.text.x=element_blank(),
+              axis.text.y=element_blank(),axis.ticks=element_blank())
+      
     } else {
       ggplot(datos_agregados |> 
-               filter(Tipo == input$tipo) |> 
+               filter(Año == input$anio & Tipo == input$tipo) |> 
                filter(nombre_region != "Metropolitana de Santiago"), 
-             aes_string(fill = input$anio, geometry = "geometry"))+
+             aes(fill = Cantidad, geometry = geometry))+
         geom_sf()+
-        scale_fill_gradientn(colours=(wes_palette("Zissou1")),
+        scale_fill_gradientn(colours = (wes_palette("Zissou1")),
+                             breaks = c(datos_agregados %>%
+                                          filter(Año == input$anio & Tipo == input$tipo) %>%
+                                          summarize(max_value = max(Cantidad)) %>%
+                                          pull(max_value),
+                                        datos_agregados %>%
+                                          filter(Año == input$anio & Tipo == input$tipo) %>%
+                                          summarize(max_value = max(Cantidad)) %>%
+                                          pull(max_value)/2,
+                                        datos_agregados %>%
+                                          filter(Año == input$anio & Tipo == input$tipo) %>%
+                                          summarize(min_value = min(Cantidad)) %>%
+                                          pull(min_value)
+                             ),
                              name="Frecuencia",
-                             na.value = "grey50")+ theme_classic()
-      
+                             na.value = "grey50")+ theme_classic() + 
+        theme(axis.line=element_blank(),axis.text.x=element_blank(),
+              axis.text.y=element_blank(),axis.ticks=element_blank())
     }
   })
 }
 
-
-# Run the application 
 shinyApp(ui = ui, server = server)
+
