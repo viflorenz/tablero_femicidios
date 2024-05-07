@@ -145,6 +145,12 @@ ui <- fluidPage(
       target="_blank", rel="noopener noreferrer" )
   ,", página web oficial del Ministerio de la Mujer y la 
   Equidad de Género del Gobierno de Chile."),
+  p("Los datos fueron rescatados desde la misma página web,
+    mientras que la construcción de la aplicación fue hecha
+    con Shiny. El código está ",
+    a("aquí.",
+      href = "https://github.com/viflorenz/tablero_femicidios",
+      target="_blank", rel="noopener noreferrer")),
   tabsetPanel( 
   tabPanel("Introducción",
            "Hola"),
