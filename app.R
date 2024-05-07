@@ -144,13 +144,13 @@ ui <- fluidPage(
 
     # Show a plot of the generated distribution
   fluidRow(
-    column(5,
+    column(6,
       selectInput("tipo",
                   "Tipo:",
                   unique(datos_agregados$Tipo),
                   selected = "Consumados")),
       
-      column(5,
+      column(6,
              selectInput("anio", "Año:",
                   unique(datos_agregados$Año),
                   selected = "2024"))
@@ -205,14 +205,17 @@ server <- function(input, output){
         geom_sf()+
         scale_fill_gradientn(colours = (wes_palette("Zissou1")),
                              breaks = c(datos_agregados %>%
+                                          filter(nombre_region != "Metropolitana de Santiago") |> 
                                           filter(Año == input$anio & Tipo == input$tipo) %>%
                                           summarize(max_value = max(Cantidad)) %>%
                                           pull(max_value),
                                         datos_agregados %>%
+                                          filter(nombre_region != "Metropolitana de Santiago") |> 
                                           filter(Año == input$anio & Tipo == input$tipo) %>%
                                           summarize(max_value = max(Cantidad)) %>%
                                           pull(max_value)/2,
                                         datos_agregados %>%
+                                          filter(nombre_region != "Metropolitana de Santiago") |> 
                                           filter(Año == input$anio & Tipo == input$tipo) %>%
                                           summarize(min_value = min(Cantidad)) %>%
                                           pull(min_value)
