@@ -123,7 +123,7 @@ plot_agregados_sn <- ggplot(datos_agregados |>
 # ggplotly(plot_agregados_sn)
 
 tabla_bonita <- datos_agregados |> 
-  select(!c(codigo_region,geometry)) |> 
+  select(!c(geometry)) |> 
   select(nombre_region, Tipo, everything()) |> 
   rename("Región" = nombre_region) |> 
   rename("Tipo femicidio" = "Tipo")
@@ -141,30 +141,32 @@ ui <- fluidPage(
   titlePanel("Femicidios en Chile 2013 - 2024"),
   
   # Sidebar with a slider input for number of bins 
-  sidebarLayout(
-    sidebarPanel(
+
+    # Show a plot of the generated distribution
+  fluidRow(
+    column(5,
       selectInput("tipo",
                   "Tipo:",
                   unique(datos_agregados$Tipo),
-                  selected = "Consumados"),
+                  selected = "Consumados")),
       
-      selectInput("anio", "Año:",
+      column(5,
+             selectInput("anio", "Año:",
                   unique(datos_agregados$Año),
-                  selected = "2024"),
-      
-      checkboxInput("rm_incl", "Región Metropolitana inclusive", TRUE),
-      verbatimTextOutput("Sí"),
-      
-      checkboxInput(inputId = "mostrar_tabla",
-                    label = "Mostrar tabla de datos",
-                    value = TRUE)
+                  selected = "2024"))
     ),
-    
-    # Show a plot of the generated distribution
-    mainPanel(
+  fluidRow(
+    column(6,
+      checkboxInput("rm_incl", "Región Metropolitana inclusive", TRUE),
+      verbatimTextOutput("Sí"))
+    ),
       plotOutput("coropletico"),
+  fluidRow(
+    column(6,
+           checkboxInput(inputId = "mostrar_tabla",
+                         label = "Mostrar tabla de datos",
+                         value = FALSE)),
       DT::DTOutput(outputId = "tabla_bonita")
-    )
   )
 )
 
