@@ -153,7 +153,32 @@ ui <- fluidPage(
       target="_blank", rel="noopener noreferrer")),
   tabsetPanel( 
   tabPanel("Introducción",
-           "Hola"),
+           p("Según la legislación chilena (Ley 21.212), el femicidio 
+           es el asesinato de una mujer ejecutado por quien es o ha 
+           sido su cónyuge o conviviente, o con quien tiene o ha 
+           tenido un hijo en común, en razón de tener o haber tenido 
+           con ella una relación de pareja de carácter sentimental 
+           o sexual sin convivencia."),
+           p("También se considera femicidio el asesinato de una 
+           mujer en razón de su género cuando la muerte se produzca 
+           en alguna de las siguientes circunstancias:"),
+           p("1.-Ser consecuencia de la negativa a establecer con el 
+           autor una relación de carácter sentimental o sexual."),
+           p("2.-Ser consecuencia de que la víctima ejerza o haya
+           ejercido la prostitución, u otra ocupación u oficio de
+           carácter sexual."),
+           p("3.-Haberse cometido el delito tras haber ejercido 
+           contra la víctima cualquier forma de violencia sexual, 
+           sin perjuicio de lo dispuesto en el artículo 372bis."),
+           p("4.-Haberse realizado con motivo de la orientación 
+           sexual, identidad de género o expresión de género de 
+           la víctima."),
+           p("5.-Haberse cometido en cualquier tipo de situación 
+             en la que se den circunstancias de manifiesta 
+             subordinación por las relaciones desiguales de 
+             poder entre el agresor y la víctima, o motivada por 
+             una evidente intención de discriminación.")
+           ),
   tabPanel("Absoluto",
   fluidRow(
     column(6,
