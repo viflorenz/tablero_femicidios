@@ -137,12 +137,11 @@ datos_agregados <- datos_agregados |>
 ui <- fluidPage(
   #tema shinythemes
   theme = shinytheme("simplex"),
-  # Application title
-  titlePanel("Femicidios en Chile 2013 - 2024"),
-  
-  # Sidebar with a slider input for number of bins 
 
-    # Show a plot of the generated distribution
+  titlePanel("Femicidios en Chile 2013 - 2024"),
+  tabsetPanel( 
+  tabPanel("Introducción"),
+  tabPanel("Absoluto",
   fluidRow(
     column(6,
       selectInput("tipo",
@@ -168,7 +167,9 @@ ui <- fluidPage(
                          value = FALSE)),
       DT::DTOutput(outputId = "tabla_bonita")
   )
-)
+  ), #tabPannel comma
+  tabPanel("Proporcional")
+))
 
 server <- function(input, output){
   
