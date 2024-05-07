@@ -122,7 +122,9 @@ plot_agregados_sn <- ggplot(datos_agregados |>
                        na.value = "grey50")+ theme_classic()
 # ggplotly(plot_agregados_sn)
 
-tabla_bonita <- datos_agregados 
+tabla_bonita <- datos_agregados |> 
+  select(!c(codigo_region,geometry)) |> 
+  select(nombre_region, Tipo, everything())
 
 datos_agregados <- datos_agregados |> 
   pivot_longer(!c(codigo_region,nombre_region,Tipo,geometry),
