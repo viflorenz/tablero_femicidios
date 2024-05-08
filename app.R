@@ -429,7 +429,7 @@ server <- function(input, output){
   output$tabla_bonita_pc <- DT::renderDT({
     if(input$mostrar_tabla_pc){
       DT::datatable(tabla_pob_datos_percapita %>%
-                      filter(`Tipo femicidio` == input$tipo_pc),
+                      filter(Tipo == input$tipo_pc),
                     options = list(dom = "ft",
                                    pageLength = 10000))
     }
