@@ -168,9 +168,29 @@ tabla_pob_datos_percapita <- tabla_pob_datos %>%
   ) |> 
   select(c(Región, Población, Tipo, geometry,18:29))
 
-i <- c(5:16)
 datos_percapita <- tabla_pob_datos_percapita
 
+tabla_pob_datos_percapita$Población <- format(round(as.numeric(tabla_pob_datos_percapita$Población), 1), big.mark=".")
+
+tabla_pob_datos_percapita <- tabla_pob_datos_percapita |> 
+  select(-geometry)
+
+clean_column_names <- function(df, string_to_remove) {
+  # Use gsub to replace the unwanted string with an empty string
+  new_colnames <- gsub(string_to_remove, "", colnames(df))
+  # Assign new column names back to the dataframe
+  colnames(df) <- new_colnames
+  return(df)
+}
+
+# Apply the function to the dataframe
+tabla_pob_datos_percapita <- clean_column_names(tabla_pob_datos_percapita, "percapita_")
+
+tabla_pob_datos_percapita[4:15] <- lapply(tabla_pob_datos_percapita[4:15], function(col) {
+  str_replace_all(col, "\\.", "\\,")
+})
+
+i <- c(5:16)
 datos_percapita[ , i] <- apply(datos_percapita[ , i], 2,            # Specify own function within apply
                                function(x) as.numeric(as.character(x)))
 
