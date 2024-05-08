@@ -269,7 +269,27 @@ ui <- fluidPage(
       DT::DTOutput(outputId = "tabla_bonita")
   )
   ), #tabPannel comma
-  tabPanel("Cantidades per cápita")
+  tabPanel("Cantidades per cápita",
+           fluidRow(
+             column(6,
+                    selectInput("tipo_pc",
+                                "Tipo:",
+                                unique(datos_percapita$Tipo),
+                                selected = "Consumados")),
+             
+             column(6,
+                    selectInput("anio_pc", "Año:",
+                                unique(datos_percapita$Año),
+                                selected = "2024"))
+             ),
+           plotOutput("coropletico_pc"),
+           fluidRow(
+             column(6,
+                    checkboxInput(inputId = "mostrar_tabla_pc",
+                                  label = "Mostrar tabla de datos",
+                                  value = FALSE)),
+             DT::DTOutput(outputId = "tabla_bonita_pc")
+           ))
 ))
 
 server <- function(input, output){
@@ -362,6 +382,54 @@ server <- function(input, output){
     if(input$mostrar_tabla){
       DT::datatable(tabla_bonita %>%
                       filter(`Tipo femicidio` == input$tipo),
+                    options = list(dom = "ft",
+                                   pageLength = 10000))
+    }
+  })
+ output$coropletico_pc <- renderPlot({
+
+      ggplot(datos_percapita |> 
+               filter(Año == input$anio_pc & Tipo == input$tipo_pc), 
+             aes(fill = Cantidad, geometry = geometry))+
+        geom_sf()+
+        scale_fill_gradientn(colours = (wes_palette("Zissou1")),
+                             breaks = c(datos_percapita %>%
+                                          filter(Año == input$anio_pc & Tipo == input$tipo_pc) %>%
+                                          summarize(max_value = max(Cantidad)) %>%
+                                          pull(max_value),
+                                        datos_percapita %>%
+                                          filter(Año == input$anio_pc & Tipo == input$tipo_pc) %>%
+                                          summarize(max_value = max(Cantidad)) %>%
+                                          pull(max_value)/2,
+                                        datos_percapita %>%
+                                          filter(Año == input$anio_pc & Tipo == input$tipo_pc) %>%
+                                          summarize(min_value = min(Cantidad)) %>%
+                                          pull(min_value)
+                             ),
+                             labels = c(datos_percapita %>%
+                                          filter(Año == input$anio_pc & Tipo == input$tipo_pc) %>%
+                                          summarize(max_value = max(Cantidad)) %>%
+                                          pull(max_value),
+                                        datos_percapita %>%
+                                          filter(Año == input$anio_pc & Tipo == input$tipo_pc) %>%
+                                          summarize(max_value = max(Cantidad)) %>%
+                                          pull(max_value)/2,
+                                        datos_percapita %>%
+                                          filter(Año == input$anio_pc & Tipo == input$tipo_pc) %>%
+                                          summarize(min_value = min(Cantidad)) %>%
+                                          pull(min_value)
+                             ),
+                             name="Frecuencia",
+                             na.value = "grey50")+ theme_classic() + 
+        theme(axis.line=element_blank(),axis.text.x=element_blank(),
+              axis.text.y=element_blank(),axis.ticks=element_blank())
+      
+  })
+  
+  output$tabla_bonita_pc <- DT::renderDT({
+    if(input$mostrar_tabla_pc){
+      DT::datatable(tabla_pob_datos_percapita %>%
+                      filter(`Tipo femicidio` == input$tipo_pc),
                     options = list(dom = "ft",
                                    pageLength = 10000))
     }
