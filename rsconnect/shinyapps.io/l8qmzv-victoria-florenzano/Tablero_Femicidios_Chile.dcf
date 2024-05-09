@@ -1,0 +1,12 @@
+name: Tablero_Femicidios_Chile
+title: Tablero Datos Abiertos - Femicidios Chile
+username: l8qmzv-victoria-florenzano
+account: l8qmzv-victoria-florenzano
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 11973503
+bundleId: 8598477
+url: https://l8qmzv-victoria-florenzano.shinyapps.io/Tablero_Femicidios_Chile/
+version: 1
+asMultiple: FALSE
+asStatic: FALSE
