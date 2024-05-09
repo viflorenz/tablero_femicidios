@@ -188,13 +188,11 @@ tabla_pob_datos_percapita <- clean_column_names(tabla_pob_datos_percapita, "perc
 
 tabla_pob_datos_percapita[4:15] <- lapply(tabla_pob_datos_percapita[4:15], function(col) {
   str_replace_all(col, "\\.", "\\,")
-})
+}) #tabla bonita percapita
 
 i <- c(5:16)
 datos_percapita[ , i] <- apply(datos_percapita[ , i], 2,            # Specify own function within apply
                                function(x) as.numeric(as.character(x)))
-
-
 tabla_bonita <- datos_agregados |> 
   select(!c(geometry, codigo_region)) |> 
   select(nombre_region, Tipo, everything()) |> 
@@ -210,6 +208,10 @@ datos_percapita <- datos_percapita |>
   pivot_longer(!c(Región,Tipo,geometry,Población),
                names_to = "Año",
                values_to = "Cantidad")
+
+datos_percapita$Cantidad_etiqueta <- datos_percapita$Cantidad
+
+datos_percapita$Cantidad_etiqueta <- format(datos_percapita$Cantidad_etiqueta, scientific = FALSE, digits = 10)
 
 
 ui <- fluidPage(
@@ -262,7 +264,7 @@ ui <- fluidPage(
              poder entre el agresor y la víctima, o motivada por 
              una evidente intención de discriminación.")
            ),
-  tabPanel("Cantidades absolutas",
+  tabPanel("Cantidades",
   fluidRow(
     column(6,
       selectInput("tipo",
@@ -419,27 +421,21 @@ server <- function(input, output){
                                           pull(max_value),
                                         datos_percapita %>%
                                           filter(Año == input$anio_pc & Tipo == input$tipo_pc) %>%
-                                          summarize(max_value = max(Cantidad)) %>%
-                                          pull(max_value)/2,
-                                        datos_percapita %>%
-                                          filter(Año == input$anio_pc & Tipo == input$tipo_pc) %>%
                                           summarize(min_value = min(Cantidad)) %>%
                                           pull(min_value)
                              ),
                              labels = c(datos_percapita %>%
                                           filter(Año == input$anio_pc & Tipo == input$tipo_pc) %>%
-                                          summarize(max_value = max(Cantidad)) %>%
-                                          pull(max_value),
+                                          filter(Cantidad == max(Cantidad))%>%
+                                          summarize(Cantidad_etiqueta = first(Cantidad_etiqueta)) %>%
+                                          pull(Cantidad_etiqueta),
                                         datos_percapita %>%
                                           filter(Año == input$anio_pc & Tipo == input$tipo_pc) %>%
-                                          summarize(max_value = max(Cantidad)) %>%
-                                          pull(max_value)/2,
-                                        datos_percapita %>%
-                                          filter(Año == input$anio_pc & Tipo == input$tipo_pc) %>%
-                                          summarize(min_value = min(Cantidad)) %>%
-                                          pull(min_value)
+                                          filter(Cantidad == min(Cantidad))%>%
+                                          summarize(Cantidad_etiqueta = first(Cantidad_etiqueta)) %>%
+                                          pull(Cantidad_etiqueta)
                              ),
-                             name="Frecuencia",
+                             name="Frecuencia per cápita",
                              na.value = "grey50")+ theme_classic() + 
         theme(axis.line=element_blank(),axis.text.x=element_blank(),
               axis.text.y=element_blank(),axis.ticks=element_blank())
