@@ -393,7 +393,7 @@ server <- function(input, output){
                                           summarize(min_value = min(Cantidad)) %>%
                                           pull(min_value)
                              ),
-                             name="Frecuencia",
+                             name="Frecuencia\n",
                              na.value = "grey50")+ theme_classic() + 
         theme(axis.line=element_blank(),axis.text.x=element_blank(),
               axis.text.y=element_blank(),axis.ticks=element_blank())
@@ -435,7 +435,7 @@ server <- function(input, output){
                                           summarize(Cantidad_etiqueta = first(Cantidad_etiqueta)) %>%
                                           pull(Cantidad_etiqueta)
                              ),
-                             name="Frecuencia per cápita",
+                             name="Frecuencia\nper cápita\n",
                              na.value = "grey50")+ theme_classic() + 
         theme(axis.line=element_blank(),axis.text.x=element_blank(),
               axis.text.y=element_blank(),axis.ticks=element_blank())
