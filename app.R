@@ -210,9 +210,8 @@ datos_percapita <- datos_percapita |>
                values_to = "Cantidad")
 
 datos_percapita$Cantidad_etiqueta <- datos_percapita$Cantidad
-
 datos_percapita$Cantidad_etiqueta <- format(datos_percapita$Cantidad_etiqueta, scientific = FALSE, digits = 10)
-
+datos_percapita$Año <- str_remove(datos_percapita$Año, "percapita_")
 
 ui <- fluidPage(
   #tema shinythemes
