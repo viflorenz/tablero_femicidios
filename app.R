@@ -13,7 +13,9 @@ library(plotly)
 #https://datos.gob.cl/dataset/7161
 
 url <- 'https://www.sernameg.gob.cl/?page_id=27084'
-html <- read_html(url) %>% 
+download.file(url, destfile = "scrapedpage.html", quiet=TRUE)
+content <- read_html("scrapedpage.html")
+html <- content %>% 
   html_table()
 
 tabla <- html[[1]]
